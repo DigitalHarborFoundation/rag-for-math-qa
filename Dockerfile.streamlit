@@ -1,0 +1,18 @@
+FROM python:3.10
+
+RUN python -m pip install --upgrade pip
+RUN curl -sSL https://install.python-poetry.org | python -
+
+WORKDIR /usr/app
+
+COPY ./src ./src
+COPY ./tests ./tests
+
+# note: README.md is required for Poetry
+COPY README.md README.md
+COPY pyproject.toml pyproject.toml
+COPY poetry.lock poetry.lock
+RUN pip install .
+
+EXPOSE 8502
+ENTRYPOINT ["streamlit", "run", "src/streamlit/Annotation_tool.py", "--server.port=8502", "--server.address=0.0.0.0"]
