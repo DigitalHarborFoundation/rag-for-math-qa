@@ -14,10 +14,11 @@ install:
 	@$(MAKE) install-precommits
 
 ensure-poetry:
+	# see issue: https://stackoverflow.com/questions/77019756/make-not-finding-executable-added-to-path-in-makefile
 	@if ! command -v poetry &> /dev/null; then \
 		echo "Installing poetry"; \
 		curl -sSL https://install.python-poetry.org | python - ; \
-		echo "Poetry installed"; \
+		echo "Poetry installed, but you might need to update your PATH before make will detect it."; \
 	fi
 	@poetry install
 
