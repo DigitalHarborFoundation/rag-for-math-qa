@@ -11,3 +11,13 @@ def test_compute_macro_f1():
         metrics.compute_macro_f1(["test"], "")
     with pytest.raises(ValueError):
         metrics.compute_macro_f1([""], "test")
+
+    # K-F1++
+    assert (
+        metrics.compute_macro_f1(
+            ["George Washington"],
+            "Who was the first president? George Washington",
+            discount_text="Who was the first president?",
+        )
+        == 1
+    )
