@@ -27,7 +27,7 @@ install-precommits:
 	@poetry run pre-commit install --overwrite --install-hooks
 
 jupyter:
-	@poetry run jupyter lab
+	poetry run jupyter lab
 
 test:
 	@poetry run pytest --cov=src --cov-report term-missing

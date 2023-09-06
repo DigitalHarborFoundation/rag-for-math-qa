@@ -1,4 +1,8 @@
-# annotation-tools: Streamlit annotation app backed by Supabase
+# annotation-tools: Streamlit annotation app
+
+Intended to be the base for a Streamlit app that could be used for annotation, but also now using it for experimentation with the LLM hub.
+
+Nothing is expected to be fully stable in this repository.
 
 
 ## Development
@@ -9,17 +13,33 @@ Primary contributor:
 
 ## Local development setup
 
-This project uses `make` and `Poetry` to manage and install dependencies
+This project uses `make` and `Poetry` to manage and install dependencies.
+
+On Windows, you'll need to use WSL and maybe make some other changes.
 
 ### Python development
 
-Use `make install` to install all needed dependencies (including the pre-commit hooks).
+Use `make install` to install all needed dependencies (including the pre-commit hooks and Poetry).
+
+You'll probably need to manually add Poetry to your PATH, e.g. by updating your `.bashrc` (or relevant equivalent):
+
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+```
 
 ### Run tests
 
 ```bash
 make test
 ```
+
+### Run Jupyter Lab
+
+```bash
+make jupyter
+```
+
+Which really just runs `poetry run jupyter lab`, so feel free to customize your Jupyter experience.
 
 ### Other useful commands
 
@@ -28,7 +48,7 @@ make test
 
 ### Streamlit
 
-A few notes about the app.
+A few notes about the Streamlit app.
 
 #### Authentication
 
