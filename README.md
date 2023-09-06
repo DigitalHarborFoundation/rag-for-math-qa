@@ -2,6 +2,8 @@
 
 Intended to be the base for a Streamlit app that could be used for annotation, but also now using it for experimentation with the LLM hub.
 
+We would probably rename the repo before making it public.
+
 Nothing is expected to be fully stable in this repository.
 
 
