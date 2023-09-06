@@ -7,7 +7,7 @@ authors = [
 ]
 license = "MIT"
 readme = "README.md"
-packages = [{include = "experiment", from = "src"}]
+packages = [{include = "experiment", from = "src"}, {include = "rag", from = "src"}]
 repository = "https://github.com/levon003/annotation-tools.git"
 
 [tool.poetry.dependencies]

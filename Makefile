@@ -12,6 +12,7 @@ help:
 install:
 	@$(MAKE) ensure-poetry
 	@$(MAKE) install-precommits
+	@poetry build
 
 ensure-poetry:
 	@# see issue: https://stackoverflow.com/questions/77019756/make-not-finding-executable-added-to-path-in-makefile
