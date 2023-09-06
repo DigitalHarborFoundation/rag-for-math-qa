@@ -1,4 +1,4 @@
-from annotation import auth
+from experiment import auth
 
 
 def test_passwd_check():

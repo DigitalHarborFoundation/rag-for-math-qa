@@ -14,7 +14,7 @@ install:
 	@$(MAKE) install-precommits
 
 ensure-poetry:
-	# see issue: https://stackoverflow.com/questions/77019756/make-not-finding-executable-added-to-path-in-makefile
+	@# see issue: https://stackoverflow.com/questions/77019756/make-not-finding-executable-added-to-path-in-makefile
 	@if ! command -v poetry &> /dev/null; then \
 		echo "Installing poetry"; \
 		curl -sSL https://install.python-poetry.org | python - ; \
@@ -27,7 +27,7 @@ install-precommits:
 	@poetry run pre-commit install --overwrite --install-hooks
 
 jupyter:
-	@jupyter lab
+	@poetry run jupyter lab
 
 test:
 	@poetry run pytest --cov=src --cov-report term-missing
