@@ -1,8 +1,11 @@
+import functools
 import json
+import multiprocessing as mp
 import time
 from pathlib import Path
+from typing import Callable
 
-import openai
+from experiment import completion_utils
 
 
 class GenerationCorpus:
@@ -25,6 +28,11 @@ class GenerationCorpus:
     def _save_generation(self, metadata: dict):
         with open(self.generation_filepath, "a") as outfile:
             outfile.write(json.dumps(metadata) + "\n")
+
+    def _save_generations(self, metadata_list: list[dict]):
+        with open(self.generation_filepath, "a") as outfile:
+            for metadata in metadata_list:
+                outfile.write(json.dumps(metadata) + "\n")
 
     def is_already_generated(self, messages: list, metadata: dict | None):
         if metadata is None:
@@ -56,7 +64,7 @@ class GenerationCorpus:
             metadata = {}
         if self.is_already_generated(messages, metadata):
             return False
-        generation = get_completion_with_retries(messages)
+        generation = completion_utils.get_completion_with_retries(messages)
         metadata["messages"] = messages
         metadata["generation"] = generation
         self.generations.append(metadata)
@@ -65,37 +73,46 @@ class GenerationCorpus:
             time.sleep(sleep)  # being a bit polite on repeated api calls
         return True
 
+    def batch_generate(
+        self,
+        metadata_list: list[dict],
+        n_processes: int = 4,
+        sleep: float = 0.1,
+        completion_func: Callable = completion_utils.get_completion_noraise,
+    ) -> int:
+        """_summary_
 
-def get_completion_with_retries(messages: list, max_attempts: int = 3, sleep_time: float = 5) -> str:
-    """Could use a library for this, but let's keep it simple.
+        Args:
+            metadata_list (list[dict]): List of metadata dictionaries, that must each include a 'messages' key with a list of messages.
+            n_processes (int, optional): # processes to spawn in the pool. Defaults to 4.
+            sleep (float, optional): Time to sleep between requests IN EACH PROCESS. Defaults to 0.1.
+            completion_func (Callable, optional): Function to use to produce generations from a list of messages. Defaults to completion_utils.get_completion_noraise.
 
-    Args:
-        messages (list): _description_
-        max_attempts (int, optional): Defaults to 3.
-        sleep_time (float, optional): Defaults to 5 (seconds).
+        Raises:
+            ValueError: If 'messages' is not included in one of the metadata dicts.
 
-    Returns:
-        str: The completion
-    """
-    n_attempts = 0
-    while n_attempts < max_attempts:
-        n_attempts += 1
-        try:
-            return get_completion(messages)
-        except Exception as ex:
-            if n_attempts == max_attempts:
-                raise ex
-            time.sleep(sleep_time * n_attempts)
-    raise ValueError(
-        f"Exceeded max attempts ({max_attempts}), base sleep interval {sleep_time}s; this error indicates an unexpected logical flow",
-    )
-
-
-def get_completion(messages: list) -> str:
-    completion = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo-0613",
-        messages=messages,
-        request_timeout=5,
-    )
-    assistant_message = completion["choices"][0]["message"]["content"]
-    return assistant_message
+        Returns:
+            int: Number of new generations. Note this MAY imply generations failed if < len(metadata_list), but only if no metadata were already generated.
+        """
+        metadata_to_process = []
+        for metadata in metadata_list:
+            if "messages" not in metadata:
+                raise ValueError("Expected 'messages' in all provided metadata.")
+            if not self.is_already_generated(metadata["messages"], metadata):
+                metadata_to_process.append(metadata)
+        if len(metadata_to_process) == 0:
+            return 0
+        get_completion_func = functools.partial(completion_func, sleep=sleep)
+        with mp.Pool(processes=n_processes) as pool:
+            message_lists = (md["messages"] for md in metadata_to_process)
+            results = pool.map(get_completion_func, message_lists)
+            assert len(results) == len(metadata_to_process)
+        metadata_completed = []
+        for metadata, result in zip(metadata_to_process, results):
+            if result is not None:
+                metadata["generation"] = result
+                metadata_completed.append(metadata)
+        if len(metadata_completed) > 0:
+            self.generations.extend(metadata_completed)
+            self._save_generations(metadata_completed)
+        return len(metadata_completed)
