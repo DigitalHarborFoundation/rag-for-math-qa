@@ -12,6 +12,7 @@ def mock_get_completion_noerror(*args, **kwargs):
 
 
 def test_get_completion_noraise(monkeypatch, caplog):
+    # verify behavior when errors occur
     monkeypatch.setattr(
         "experiment.completion_utils.get_completion",
         mock_get_completion_error,
@@ -24,6 +25,7 @@ def test_get_completion_noraise(monkeypatch, caplog):
         len(caplog.records) == 3
     ), "Expected max_attempts error messages from attempts + 1 caught by get_completion_noraise."
 
+    # verify no-error behavior
     monkeypatch.setattr(
         "experiment.completion_utils.get_completion",
         mock_get_completion_noerror,

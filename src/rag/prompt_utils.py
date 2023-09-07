@@ -193,6 +193,13 @@ class PromptManager:
         total_token_count = sum(token_counts)
         return total_token_count
 
+    def get_recent_slot_fill(self, slot_key: str) -> str | None:
+        for slot_fill_dict in self.recent_slot_fill_dict:
+            for key, value in slot_fill_dict:
+                if key == slot_key:
+                    return value
+        return None
+
     def identify_slots(prompt_string: str) -> list[str]:
         """Uses a regex to identify missing slots in a prompt_string.
 
