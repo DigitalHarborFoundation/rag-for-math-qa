@@ -13,7 +13,7 @@ def get_completion_noraise(messages: list, sleep: float = 0.1, **kwargs) -> str 
         str | None: The completion, or None if an exception was raised.
     """
     try:
-        get_completion_with_wait(messages, sleep=sleep, **kwargs)
+        return get_completion_with_wait(messages, sleep=sleep, **kwargs)
     except Exception as ex:
         logger.warning(f"get_completion_noraise returning None due to {type(ex).__name__} error: {ex}")
         return None
@@ -57,11 +57,11 @@ def get_completion_with_retries(
     )
 
 
-def get_completion(messages: list, model_name: str = "gpt-3.5-turbo-0613") -> str:
+def get_completion(messages: list, model_name: str = "gpt-3.5-turbo-0613", request_timeout: float = 20) -> str:
     completion = openai.ChatCompletion.create(
         model=model_name,
         messages=messages,
-        request_timeout=5,
+        request_timeout=request_timeout,
     )
     assistant_message = completion["choices"][0]["message"]["content"]
     return assistant_message
