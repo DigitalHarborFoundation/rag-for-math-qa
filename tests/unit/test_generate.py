@@ -11,6 +11,10 @@ def mock_get_completion(*args, **kwargs):
     return " ".join(np.random.choice(choices, size=50))
 
 
+def mock_get_completion_error(*args, **kwargs):
+    raise ValueError(f"Args: {args}")
+
+
 @pytest.fixture
 def patch_get_completion(monkeypatch):
     monkeypatch.setattr(
@@ -57,8 +61,9 @@ def test_GenerationCorpus_batch(tmp_path):
         },
     ]
     n_to_generate = 200
+    metadata_list = [{"test_id": i, "messages": messages} for i in range(n_to_generate)]
     n_generated = corpus.batch_generate(
-        [{"test_id": i, "messages": messages} for i in range(n_to_generate)],
+        metadata_list,
         n_processes=4,
         sleep=0,
         completion_func=mock_get_completion,
@@ -67,3 +72,33 @@ def test_GenerationCorpus_batch(tmp_path):
     assert len(corpus.generations) == n_to_generate
     for generation in corpus.generations:
         assert generation["generation"] is not None
+
+    assert (
+        corpus.batch_generate(
+            metadata_list,
+            n_processes=4,
+            sleep=0,
+            completion_func=mock_get_completion,
+        )
+        == 0
+    )
+
+
+def test_GenerationCorpus_batch_error(tmp_path):
+    corpus = generate.GenerationCorpus(tmp_path, "test_corpus")
+    assert len(corpus.generations) == 0
+    messages = [
+        {
+            "role": "user",
+            "content": "Test query",
+        },
+    ]
+    n_to_generate = 2
+    metadata_list = [{"test_id": i, "messages": messages} for i in range(n_to_generate)]
+    with pytest.raises(ValueError):
+        corpus.batch_generate(
+            metadata_list,
+            n_processes=1,
+            sleep=0,
+            completion_func=mock_get_completion_error,
+        )
