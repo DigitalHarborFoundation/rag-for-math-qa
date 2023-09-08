@@ -1,4 +1,4 @@
-guidance_condition_low = [
+low = [
     {
         "role": "system",
         "content": """You are going to act as a mathematics tutor for a 13 year old student who is in grade 8 or 9 and lives in Ghana.
@@ -15,7 +15,7 @@ If the student says something inappropriate or off topic you will say you can on
     },
 ]
 
-guidance_condition_medium = [
+medium = [
     {
         "role": "system",
         "content": """You are going to act as a mathematics tutor for a 13 year old student who is in grade 8 or 9 and lives in Ghana.
@@ -32,7 +32,7 @@ If the student says something inappropriate or off topic you will say you can on
     },
 ]
 
-guidance_condition_high = [
+high = [
     {
         "role": "system",
         "content": """You are going to act as a mathematics tutor for a 13 year old student who is in grade 8 or 9 and lives in Ghana.
@@ -49,28 +49,27 @@ If the student says something inappropriate or off topic you will say you can on
     },
 ]
 
-guidance_condition_extract_relevant = [
+extract_relevant = [
     {
         "role": "user",
-        "content": """You are going to act as a mathematics tutor for a 13 year old student who is in grade 8 or 9 and lives in Ghana.
-You will be encouraging and factual.
-Prefer simple, short responses.
-If the student says something inappropriate or off topic you will say you can only focus on mathematics and ask them if they have any math-related follow-up questions.
+        "content": """Given a middle-school math student's question, you will identify the most relevant section from a textbook.
 
-The student's question: {user_query}
+Student question: {user_query}
 
-Don't respond to this question. Instead, repeat verbatim the paragraph below that is most relevant to the student's question.
+Repeat the student's question and then repeat in full the most relevant paragraph from my math textbook. If none of them seem relevant, take a deep breath and output the most relevant. Don't say anything else.
 
-Paragraphs:
+Textbook paragraphs:
+
 {rori_microlesson_texts}
 {openstax_subsection_texts}""",
     },
 ]
 
+# TODO consider if these guidance conditions could include their own dbinfo settings as well
 guidance_condition_messages_map = {
-    "low": guidance_condition_low,
-    "medium": guidance_condition_medium,
-    "high": guidance_condition_high,
-    "extract_relevant": guidance_condition_extract_relevant,
+    "low": low,
+    "medium": medium,
+    "high": high,
+    "extract_relevant": extract_relevant,
 }
 guidance_condition_name_list = [key for key in guidance_condition_messages_map.keys()]

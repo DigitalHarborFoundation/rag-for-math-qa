@@ -8,6 +8,10 @@ from typing import Callable
 from experiment import completion_utils
 
 
+def is_valid_generation(generation: dict):
+    return "messages" in generation and "generation" in generation
+
+
 class GenerationCorpus:
     def __init__(self, output_dir: Path, key: str, overwrite: bool = False):
         output_dir.mkdir(exist_ok=True)
@@ -25,12 +29,24 @@ class GenerationCorpus:
                     d = json.loads(line)
                     self.generations.append(d)
 
+    def overwrite(self):
+        self._save_generations(self.generations, write_mode="w")
+
+    def filter_generations(self, should_include_func: Callable = is_valid_generation) -> int:
+        filtered_generations = []
+        for generation in self.generations:
+            if should_include_func(generation):
+                filtered_generations.append(generation)
+        n_removed = len(self.generations) - len(filtered_generations)
+        self.generations = filtered_generations
+        return n_removed
+
     def _save_generation(self, metadata: dict):
         with open(self.generation_filepath, "a") as outfile:
             outfile.write(json.dumps(metadata) + "\n")
 
-    def _save_generations(self, metadata_list: list[dict]):
-        with open(self.generation_filepath, "a") as outfile:
+    def _save_generations(self, metadata_list: list[dict], write_mode: str = "a"):
+        with open(self.generation_filepath, write_mode) as outfile:
             for metadata in metadata_list:
                 outfile.write(json.dumps(metadata) + "\n")
 

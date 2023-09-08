@@ -84,6 +84,11 @@ def test_GenerationCorpus_batch(tmp_path):
         == 0
     )
 
+    assert corpus.filter_generations() == 0
+    assert corpus.filter_generations(lambda _: False) == n_to_generate
+    assert len(corpus.generations) == 0
+    corpus.overwrite()
+
 
 def test_GenerationCorpus_batch_error(tmp_path):
     corpus = generate.GenerationCorpus(tmp_path, "test_corpus")
