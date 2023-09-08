@@ -79,6 +79,7 @@ def test_GenerationCorpus_batch(tmp_path):
             n_processes=4,
             sleep=0,
             completion_func=mock_get_completion,
+            fake_kwarg=0,  # also test passing a kwarg
         )
         == 0
     )

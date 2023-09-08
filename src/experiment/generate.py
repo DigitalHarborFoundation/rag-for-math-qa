@@ -34,7 +34,22 @@ class GenerationCorpus:
             for metadata in metadata_list:
                 outfile.write(json.dumps(metadata) + "\n")
 
-    def is_already_generated(self, messages: list, metadata: dict | None):
+    def is_already_generated(
+        self,
+        messages: list,
+        metadata: dict | None,
+        exclude_keys: set[str] = {"generation", "messages"},
+    ) -> bool:
+        """Determine if a generation was already created for this set of messages (and corresponding metadata).
+
+        Args:
+            messages (list): Message list to pass to the OpenAI API.
+            metadata (dict | None): Optional metadata associated with the generation.
+            exclude_keys (set[str], optional): Metadata keys to ignore when determining if this is a duplicate. Defaults to {"generation", "messages"}.
+
+        Returns:
+            bool: True if already in self.generations, False otherwise.
+        """
         if metadata is None:
             metadata = {}
         for generation in self.generations:
@@ -43,13 +58,20 @@ class GenerationCorpus:
             if generation["messages"] == messages and generation["generation"] is not None:
                 is_metadata_match = True
                 for key, value in metadata.items():
+                    if key in exclude_keys:
+                        continue
                     if key not in generation or generation[key] != value:
                         is_metadata_match = False
                 if is_metadata_match:
                     return True
         return False
 
-    def generate(self, messages: list, metadata: dict | None, sleep: float | None = 0.1) -> bool:
+    def generate(
+        self,
+        messages: list,
+        metadata: dict | None,
+        sleep: float | None = 0.1,
+    ) -> bool:
         """Generate a new ChatCompletion.
 
         Args:
@@ -73,12 +95,22 @@ class GenerationCorpus:
             time.sleep(sleep)  # being a bit polite on repeated api calls
         return True
 
+    def batch_filter_already_generated(self, metadata_list: list[dict]) -> list[dict]:
+        metadata_to_process = []
+        for metadata in metadata_list:
+            if "messages" not in metadata:
+                raise ValueError("Expected 'messages' in all provided metadata.")
+            if not self.is_already_generated(metadata["messages"], metadata):
+                metadata_to_process.append(metadata)
+        return metadata_to_process
+
     def batch_generate(
         self,
         metadata_list: list[dict],
         n_processes: int = 4,
         sleep: float = 0.1,
         completion_func: Callable = completion_utils.get_completion_noraise,
+        **kwargs,
     ) -> int:
         """_summary_
 
@@ -87,6 +119,7 @@ class GenerationCorpus:
             n_processes (int, optional): # processes to spawn in the pool. Defaults to 4.
             sleep (float, optional): Time to sleep between requests IN EACH PROCESS. Defaults to 0.1.
             completion_func (Callable, optional): Function to use to produce generations from a list of messages. Defaults to completion_utils.get_completion_noraise.
+            Other keyword args are passed to completion_func
 
         Raises:
             ValueError: If 'messages' is not included in one of the metadata dicts.
@@ -94,15 +127,10 @@ class GenerationCorpus:
         Returns:
             int: Number of new generations. Note this MAY imply generations failed if < len(metadata_list), but only if no metadata were already generated.
         """
-        metadata_to_process = []
-        for metadata in metadata_list:
-            if "messages" not in metadata:
-                raise ValueError("Expected 'messages' in all provided metadata.")
-            if not self.is_already_generated(metadata["messages"], metadata):
-                metadata_to_process.append(metadata)
+        metadata_to_process = self.batch_filter_already_generated(metadata_list)
         if len(metadata_to_process) == 0:
             return 0
-        get_completion_func = functools.partial(completion_func, sleep=sleep)
+        get_completion_func = functools.partial(completion_func, sleep=sleep, **kwargs)
         with mp.Pool(processes=n_processes) as pool:
             message_lists = (md["messages"] for md in metadata_to_process)
             results = pool.map(get_completion_func, message_lists)

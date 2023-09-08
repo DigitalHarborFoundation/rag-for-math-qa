@@ -6,14 +6,22 @@ import openai
 logger = logging.getLogger(__name__)
 
 
-def get_completion_noraise(messages: list, sleep: float = 0.1, **kwargs) -> str | None:
+def get_completion_noraise(
+    messages: list,
+    sleep: float = 0.1,
+    should_log_successful: bool = False,
+    **kwargs,
+) -> str | None:
     """Function wrapper that swallows exceptions, intended to use with multiprocessing.
 
     Returns:
         str | None: The completion, or None if an exception was raised.
     """
     try:
-        return get_completion_with_wait(messages, sleep=sleep, **kwargs)
+        generation = get_completion_with_wait(messages, sleep=sleep, **kwargs)
+        if should_log_successful:
+            logger.info("Successful completion.")
+        return generation
     except Exception as ex:
         logger.warning(f"get_completion_noraise returning None due to {type(ex).__name__} error: {ex}")
         return None

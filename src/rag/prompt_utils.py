@@ -195,7 +195,7 @@ class PromptManager:
 
     def get_recent_slot_fill(self, slot_key: str) -> str | None:
         for slot_fill_dict in self.recent_slot_fill_dict:
-            for key, value in slot_fill_dict:
+            for key, value in slot_fill_dict.items():
                 if key == slot_key:
                     return value
         return None
