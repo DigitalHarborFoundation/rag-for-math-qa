@@ -32,10 +32,14 @@ class GenerationCorpus:
     def overwrite(self):
         self._save_generations(self.generations, write_mode="w")
 
-    def filter_generations(self, should_include_func: Callable = is_valid_generation) -> int:
+    def filter_generations(
+        self,
+        should_include_func: Callable = is_valid_generation,
+        should_remove_func: Callable | None = None,
+    ) -> int:
         filtered_generations = []
         for generation in self.generations:
-            if should_include_func(generation):
+            if should_include_func(generation) and (should_remove_func is None or not should_remove_func(generation)):
                 filtered_generations.append(generation)
         n_removed = len(self.generations) - len(filtered_generations)
         self.generations = filtered_generations
@@ -111,7 +115,7 @@ class GenerationCorpus:
             time.sleep(sleep)  # being a bit polite on repeated api calls
         return True
 
-    def batch_filter_already_generated(self, metadata_list: list[dict]) -> list[dict]:
+    def batch_filter_not_already_generated(self, metadata_list: list[dict]) -> list[dict]:
         metadata_to_process = []
         for metadata in metadata_list:
             if "messages" not in metadata:
@@ -143,7 +147,7 @@ class GenerationCorpus:
         Returns:
             int: Number of new generations. Note this MAY imply generations failed if < len(metadata_list), but only if no metadata were already generated.
         """
-        metadata_to_process = self.batch_filter_already_generated(metadata_list)
+        metadata_to_process = self.batch_filter_not_already_generated(metadata_list)
         if len(metadata_to_process) == 0:
             return 0
         get_completion_func = functools.partial(completion_func, sleep=sleep, **kwargs)

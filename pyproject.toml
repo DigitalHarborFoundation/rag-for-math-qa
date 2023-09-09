@@ -27,6 +27,8 @@ scikit-learn = "^1.3.0"
 openai = "^0.28.0"
 tiktoken = "^0.4.0"
 python-dotenv = "^1.0.0"
+evaluate = "^0.4.0"
+bert-score = "^0.3.13"
 
 [tool.poetry.group.dev.dependencies]
 jupyter = "^1.0.0"

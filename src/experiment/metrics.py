@@ -1,3 +1,7 @@
+import functools
+
+import evaluate
+
 import experiment.tokenize
 
 
@@ -46,3 +50,13 @@ def compute_macro_f1(passages: list[str], generation: str, discount_text: str | 
         raise ValueError("No non-empty passages.")
     max_f1 = max(f1_scores)
     return max_f1
+
+
+@functools.cache
+def get_bertscore_metric_object():
+    return evaluate.load("bertscore")
+
+
+def compute_bertscore():
+    bert_score = get_bertscore_metric_object()
+    return bert_score
