@@ -1,5 +1,6 @@
 import functools
 
+import datasets
 import evaluate
 
 import experiment.tokenize
@@ -55,10 +56,44 @@ def compute_macro_f1(passages: list[str], generation: str, discount_text: str | 
 
 
 @functools.cache
-def get_bertscore_metric_object():
+def get_bertscore_metric_object() -> evaluate.EvaluationModule:
+    """
+    See https://huggingface.co/spaces/evaluate-metric/bertscore
+    """
     return evaluate.load("bertscore")
 
 
-def compute_bertscore():
+@functools.cache
+def get_bleurt_metric_object(checkpoint: str = "bleurt-base-512") -> evaluate.EvaluationModule:
+    """See https://huggingface.co/spaces/evaluate-metric/bleurt
+
+    Args:
+        checkpoint (str, optional): bleurt-base-512, bleurt-large-512, etc. Defaults to "bleurt-base-512".
+
+    Returns:
+         evaluate.EvaluationModule: The metric object
+    """
+    return evaluate.load(
+        "bleurt",
+        checkpoint=checkpoint,
+        module_type="metric",
+        download_config=datasets.DownloadConfig(use_etag=False),
+    )
+
+
+def compute_bertscore(passages: list[str], generation: str):
     bert_score = get_bertscore_metric_object()
-    return bert_score
+    references = passages
+    predictions = [generation] * len(references)
+    score_dict = bert_score.compute(predictions=predictions, references=references, lang="en")
+    return max(score_dict["f1"])
+
+
+def compute_bleurt(passages: list[str], generation: str, compare_to_combined_passage: bool = False):
+    bleurt = get_bleurt_metric_object()
+    references = passages
+    if compare_to_combined_passage:
+        references += ["\n".join(passages)]
+    predictions = [generation] * len(references)
+    scores = bleurt.compute(predictions=predictions, references=references)["scores"]
+    return max(scores)
