@@ -23,16 +23,18 @@ def compute_macro_f1(passages: list[str], generation: str, discount_text: str | 
     after subtracting any tokens appearing in the question from the response."
     To use K-F1++, pass in the text to ignore to discount_text.
     """
-    generation_tokens = set(experiment.tokenize.get_tokens(generation))
+    # first create the tokenization function to use
+    get_tokens = functools.partial(experiment.tokenize.get_tokens, lower=True, remove_nonalphanumeric_tokens=True)
+    generation_tokens = set(get_tokens(generation))
     if discount_text:
-        discount_tokens = set(experiment.tokenize.get_tokens(discount_text))
+        discount_tokens = set(get_tokens(discount_text))
         generation_tokens -= discount_tokens
     n_predicted_tokens = len(generation_tokens)
     if n_predicted_tokens == 0:
         raise ValueError("Expected generation to be non-empty.")
     f1_scores = []
     for passage in passages:
-        passage_tokens = set(experiment.tokenize.get_tokens(passage))
+        passage_tokens = set(get_tokens(passage))
         if discount_text:
             passage_tokens -= discount_tokens
         n_ground_truth_tokens = len(passage_tokens)
