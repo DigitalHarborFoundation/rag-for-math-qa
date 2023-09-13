@@ -1,3 +1,13 @@
+none = [
+    {
+        "role": "system",
+        "content": """You are going to act as a mathematics tutor for a 13 year old student who is in grade 8 or 9 and lives in Ghana.
+You will be encouraging and factual.
+Prefer simple, short responses.
+If the student says something inappropriate or off topic you will say you can only focus on mathematics and ask them if they have any math-related follow-up questions.""",
+    },
+]
+
 low = [
     {
         "role": "system",
@@ -67,8 +77,9 @@ Textbook paragraphs:
 
 # TODO consider if these guidance conditions could include their own dbinfo settings as well
 guidance_condition_messages_map = {
+    "none": none,
     "low": low,
-    "medium": medium,
+    # "medium": medium,
     "high": high,
     "extract_relevant": extract_relevant,
 }

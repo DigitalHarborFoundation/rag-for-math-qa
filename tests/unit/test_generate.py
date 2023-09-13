@@ -84,8 +84,24 @@ def test_GenerationCorpus_batch(tmp_path):
         == 0
     )
 
+    # test get_nonmatching_generations
+    n_generations = len(corpus.generations)
+    metadata_list = [dict(metadata) for metadata in metadata_list]
+    popped_metadata = metadata_list.pop(0)
+    nonmatching_generations = corpus.get_nonmatching_generations(metadata_list)
+    assert len(nonmatching_generations) == 1
+    assert nonmatching_generations[0] == popped_metadata
+    assert popped_metadata in corpus.generations, "Unexpectedly removed from generations."
+    assert n_generations == len(corpus.generations)
+    assert len(corpus.get_nonmatching_generations(metadata_list, should_remove_nonmatching=True)) == 1
+    assert (
+        len(corpus.generations) == n_generations - 1
+    ), "Should be one fewer generation after removing non-matching generations."
+
+    # test filter_generations() and overwite()
+    n_generations = len(corpus.generations)
     assert corpus.filter_generations() == 0
-    assert corpus.filter_generations(lambda _: False) == n_to_generate
+    assert corpus.filter_generations(lambda _: False) == n_generations
     assert len(corpus.generations) == 0
     corpus.overwrite()
 

@@ -124,6 +124,35 @@ class GenerationCorpus:
                 metadata_to_process.append(metadata)
         return metadata_to_process
 
+    def get_nonmatching_generations(
+        self,
+        metadata_list: list[dict],
+        exclude_keys: set[str] = {"generation", "messages"},
+        should_remove_nonmatching: bool = False,
+    ) -> list[dict]:
+        nonmatching_generations = []
+        nonmatching_inds = []
+        for i, generation in enumerate(self.generations):
+            generation_match_found = False
+            for metadata in metadata_list:
+                is_metadata_match = True
+                for key, value in metadata.items():
+                    if key in exclude_keys:
+                        continue
+                    if key not in generation or generation[key] != value:
+                        is_metadata_match = False
+                        break
+                if is_metadata_match:
+                    generation_match_found = True
+                    break
+            if not generation_match_found:
+                nonmatching_generations.append(generation)
+                nonmatching_inds.append(i)
+        if should_remove_nonmatching:
+            for ind in sorted(nonmatching_inds, reverse=True):
+                self.generations.pop(ind)
+        return nonmatching_generations
+
     def batch_generate(
         self,
         metadata_list: list[dict],

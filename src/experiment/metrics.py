@@ -97,3 +97,9 @@ def compute_bleurt(passages: list[str], generation: str, compare_to_combined_pas
     predictions = [generation] * len(references)
     scores = bleurt.compute(predictions=predictions, references=references)["scores"]
     return max(scores)
+
+
+def compute_bleurt_batch(passages_list: list[list[str]], generation_list: list[str]):
+    # TODO we can make this faster by implementing this
+    assert len(passages_list) == len(generation_list)
+    raise NotImplementedError("Batch scoring not yet implemented.")
