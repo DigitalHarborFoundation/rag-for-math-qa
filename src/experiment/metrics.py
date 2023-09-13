@@ -67,6 +67,9 @@ def get_bertscore_metric_object() -> evaluate.EvaluationModule:
 def get_bleurt_metric_object(checkpoint: str = "bleurt-base-512") -> evaluate.EvaluationModule:
     """See https://huggingface.co/spaces/evaluate-metric/bleurt
 
+    According to https://github.com/google-research/bleurt, the current recommended checkpoint is BLEURT-20.
+    TODO use that checkpoiont??
+
     Args:
         checkpoint (str, optional): bleurt-base-512, bleurt-large-512, etc. Defaults to "bleurt-base-512".
 
