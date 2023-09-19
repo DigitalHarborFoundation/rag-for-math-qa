@@ -2626,6 +2626,20 @@ files = [
 ]
 
 [[package]]
+name = "krippendorff"
+version = "0.6.0"
+description = "Fast computation of the Krippendorff's alpha measure."
+optional = false
+python-versions = ">=3.8,<4.0"
+files = [
+    {file = "krippendorff-0.6.0-py3-none-any.whl", hash = "sha256:fe1cc29b722a6de2e14a0a24ad02cff7c7e1c4bd67dd20a7bc8816ad3fd02c06"},
+    {file = "krippendorff-0.6.0.tar.gz", hash = "sha256:a876b8372133a0cb8c5e25db986cba3fd007d154b24b435f2f3631a793e9990c"},
+]
+
+[package.dependencies]
+numpy = ">=1.21,<2.0"
+
+[[package]]
 name = "langcodes"
 version = "3.3.0"
 description = "Tools for labeling human languages with IETF language tags"
@@ -7098,4 +7112,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.12"
-content-hash = "9f9f13a412825e30842c5c2e2f69f435641dce3b4c3e4c14f691923bbef3a8f4"
+content-hash = "6573be700aeca550b3574cd31ab42775af87600ecd3bfbba298559f9695a5433"

@@ -44,6 +44,7 @@ tensorflow-io-gcs-filesystem = [
     { version = "< 0.32.0", markers = "platform_system == 'Windows'" }
 ]
 datasets = "2.10.0"
+krippendorff = "^0.6.0"
 
 [tool.poetry.group.dev.dependencies]
 jupyter = "^1.0.0"
