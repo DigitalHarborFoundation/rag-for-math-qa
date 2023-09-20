@@ -45,6 +45,7 @@ tensorflow-io-gcs-filesystem = [
 ]
 datasets = "2.10.0"
 krippendorff = "^0.6.0"
+skrub = {git = "https://github.com/skrub-data/skrub.git"}
 
 [tool.poetry.group.dev.dependencies]
 jupyter = "^1.0.0"

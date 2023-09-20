@@ -5239,6 +5239,35 @@ files = [
 ]
 
 [[package]]
+name = "skrub"
+version = "0.0.1.dev0"
+description = "Prepping tables for machine learning"
+optional = false
+python-versions = ">=3.10"
+files = []
+develop = false
+
+[package.dependencies]
+numpy = ">=1.23.5"
+packaging = ">=23.1"
+pandas = ">=1.5.3"
+scikit-learn = ">=1.2.1"
+scipy = ">=1.9.3"
+
+[package.extras]
+benchmarks = ["autofj", "loguru", "matplotlib", "numpy", "pandas", "pyarrow", "seaborn", "thefuzz", "tqdm"]
+dev = ["coverage", "flake8", "mypy", "numpydoc", "openml", "pre-commit", "pytest", "pytest-cov", "pytest-xdist (==2.5.0)", "pytest-xdist[psutil]"]
+doc = ["jupyterlite-pyodide-kernel", "jupyterlite-sphinx", "matplotlib", "numpydoc", "pyarrow", "pydata-sphinx-theme", "seaborn", "sphinx-copybutton", "sphinx-gallery @ git+https://github.com/sphinx-gallery/sphinx-gallery", "sphinxext-opengraph", "statsmodels"]
+min-py310 = ["numpy (==1.23.5)", "pandas (==1.5.3)", "scikit-learn (==1.2.1)", "scipy (==1.9.3)"]
+pyarrow = ["pyarrow"]
+
+[package.source]
+type = "git"
+url = "https://github.com/skrub-data/skrub.git"
+reference = "HEAD"
+resolved_reference = "df168447530406e0e2ada5aecc9efca69556908d"
+
+[[package]]
 name = "smart-open"
 version = "6.4.0"
 description = "Utils for streaming large files (S3, HDFS, GCS, Azure Blob Storage, gzip, bz2...)"
@@ -7112,4 +7141,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.12"
-content-hash = "6573be700aeca550b3574cd31ab42775af87600ecd3bfbba298559f9695a5433"
+content-hash = "81c99b2759b4e3ee4509efccb168613131442444d61bfa1275c300f039f6204e"
