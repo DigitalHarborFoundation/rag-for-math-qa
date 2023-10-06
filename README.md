@@ -4,6 +4,10 @@ This repository contains analysis code, prompts, surveys, figures, and data for 
 
 This repository forks the [`llm-math-education`](https://github.com/DigitalHarborFoundation/llm-math-education) package.
 
+Cite [the paper](https://arxiv.org/abs/2310.03184) using the CITATION.cff file and dropdown:
+
+>Zachary Levonian, Chenglu Li, Wangda Zhu, Anoushka Gade, Owen Henkel, Millie-Ellen Postle, and Wanli Xing. 2023. Retrieval-augmented Generation to Improve Math Question-Answering: Trade-offs Between Groundedness and Human Preference. DOI:https://doi.org/10.48550/arXiv.2310.03184
+
 ## Development
 
 Primary code contributor:
