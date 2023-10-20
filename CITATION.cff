@@ -25,11 +25,11 @@ preferred-citation:
   doi: 10.48550/arXiv.2310.03184
   year: 2023
   conference:
-    - name: NeurIPS'23 Workshop on Generative AI for Education (GAIED)
-      city: New Orleans
-      country: US
-      date-start: 2023-12-15
-      date-end: 2023-12-15
+      name: "NeurIPS'23 Workshop on Generative AI for Education (GAIED)"
+      city: "New Orleans"
+      country: "US"
+      date-start: "2023-12-15"
+      date-end: "2023-12-15"
   authors:
   - family-names: Levonian
     given-names: Zachary
