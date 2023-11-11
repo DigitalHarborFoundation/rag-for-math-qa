@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "annotation-tools"
-version = "0.1.0"
-description = "Annotation web interface and experimentation/analysis scripts"
+name = "rag-for-math-qa"
+version = "0.2.0"
+description = "Experimentation/analysis code and scripts"
 authors = [
     "Zachary Levonian <zach@digitalharbor.org>"
 ]
