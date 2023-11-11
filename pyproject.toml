@@ -8,7 +8,7 @@ authors = [
 license = "MIT"
 readme = "README.md"
 packages = [{include = "experiment", from = "src"}, {include = "rag", from = "src"}]
-repository = "https://github.com/levon003/annotation-tools.git"
+repository = "https://github.com/DigitalHarborFoundation/rag-for-math-qa.git"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.12"
