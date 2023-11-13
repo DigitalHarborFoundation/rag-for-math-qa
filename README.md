@@ -48,3 +48,18 @@ Which really just runs `poetry run jupyter lab`, so feel free to customize your 
 
  - `poetry run <command>` - Run the given command, e.g. `poetry run pytest` invokes the tests.
  - `poetry add <package>` - Add the given package as a dependency. Use flag `-G dev` to add it as a development dependency.
+
+ ## Other notes
+
+ ### Poster figures
+
+Some logos are present in the posters directory.
+
+The Digital Harbor Foundation logo was created using [`rsvg-convert`](https://man.archlinux.org/man/rsvg-convert.1.en), installed via `brew`.
+
+I manually adjusted the source svg (dhf-logo-vector-blue.svg) to use DHF blue (#0091c9) rather than black (#010101).
+
+```bash
+brew install librsvg
+rsvg-convert -d 150 -p 150 -h 2in figures/dhf-logo-vector-blue.svg > figures/dhf-poster-logo.png
+```
