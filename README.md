@@ -63,3 +63,9 @@ I manually adjusted the source svg (dhf-logo-vector-blue.svg) to use DHF blue (#
 brew install librsvg
 rsvg-convert -d 150 -p 150 -h 2in figures/dhf-logo-vector-blue.svg > figures/dhf-poster-logo.png
 ```
+
+Converting the system diagram (converted from draw.io as an SVG, with embedded fonts):
+
+```bash
+rsvg-convert -d 150 -p 150 -h 4in figures/system-diagram.svg > figures/system-diagram-poster.png
+```
