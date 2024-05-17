@@ -12,7 +12,7 @@ Cite [the paper](https://arxiv.org/abs/2310.03184) using the CITATION.cff file a
 
 Primary code contributor:
 
- - Zachary Levonian (<zach@digitalharbor.org>)
+ - Zachary Levonian (<zach@levi.digitalharbor.org>)
 
 ## Local development setup
 
