@@ -1,5 +1,9 @@
 # Retrieval-augmented generation to improve math question-answering: trade-offs between groundedness and human preference
 
+[![arXiv](https://img.shields.io/badge/arXiv-2310.03184-b31b1b.svg)](https://arxiv.org/abs/2310.03184)
+[![License](https://img.shields.io/github/license/DigitalHarborFoundation/rag-for-math-qa)](https://github.com/DigitalHarborFoundation/rag-for-math-qa/blob/main/LICENSE)
+
+
 This repository contains analysis code, prompts, surveys, figures, and data for the paper "Retrieval-augmented generation to improve math question-answering: trade-offs between groundedness and human preference".
 
 This repository forks the [`llm-math-education`](https://github.com/DigitalHarborFoundation/llm-math-education) package.
