@@ -10,7 +10,8 @@ from experiment import qualtrics
 @pytest.fixture(scope="module")
 def qualtrics_template_filepath(pytestconfig) -> pathlib.Path:
     template_filepath = pytestconfig.rootpath / "data" / "raw" / "qualtrics" / "Rori_ranking_annotations_-_template.qsf"
-    assert template_filepath.exists()
+    if not template_filepath.exists():
+        pytest.skip(f"Qualtrics template at {template_filepath} does not exist.")
     return template_filepath
 
 
